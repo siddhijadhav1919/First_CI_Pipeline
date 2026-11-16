@@ -1,0 +1,36 @@
+# Name of the workflow - shown in the Actions tab on GitHub
+name: Python CI
+
+# WHEN to run: on every push to main and on pull requests to main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# WHAT to do
+jobs:
+  test:
+    runs-on: ubuntu-latest   # fresh Linux machine from GitHub
+    steps:
+      # Step 1: download the repository code
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 2: install Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Step 3: install packages from requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: run all tests (any failure = red cross)
+      - name: Run tests
+        run: pytest
